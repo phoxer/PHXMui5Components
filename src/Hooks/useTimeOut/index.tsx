@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const useTimeOut = (delay: number) => {
-    const [timeIsOut, setTimeIsOut] = useState(false);
+    const [timeIsOut, setTimeIsOut] = useState<boolean>(false);
     
     useEffect(() => {
         const id = setTimeout(() => setTimeIsOut(true), delay);

@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }) => {
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<any>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<any>(null);
+    const [error, setError] = useState<any>();
 
     useEffect(() => {
         const abortController = new AbortController();

@@ -1,6 +1,6 @@
 {
   "name": "@phoxer/phxmui5components",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Phoxer Mui 5 components for React",
   "main": "dist/cjs/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
+    "@rollup/plugin-typescript": "^8.3.3",
     "@types/react": "^18.0.21",
     "react": "^18.2.0",
     "rollup": "^2.79.1",
@@ -30,8 +31,5 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/phoxer"
   },
-  "types": "dist/index.d.ts",
-  "dependencies": {
-    "@rollup/plugin-typescript": "^8.3.3"
-  }
+  "types": "dist/index.d.ts"
 }
