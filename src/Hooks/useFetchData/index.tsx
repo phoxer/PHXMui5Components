@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
 const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'application/json'} }) => {
-    const [data, setData] = useState<any>();
+    const [data, setData] = useState<any>({});
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<any>();
+    const [error, setError] = useState<any>({});
     const abortController = new AbortController();
 
     const fetchData = {

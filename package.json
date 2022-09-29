@@ -1,6 +1,6 @@
 {
   "name": "@phoxer/phxmui5components",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Phoxer Mui 5 components for React",
   "main": "dist/cjs/index.js",
   "scripts": {
