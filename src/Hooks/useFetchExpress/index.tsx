@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 
-const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }) => {
-    const [data, setData] = useState<any>({});
+type TUseFetchExpress<T> = {
+    readonly loading: boolean;
+    readonly error: Error | null;
+    readonly result: T | null;
+}
+
+const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }): TUseFetchExpress<unknown> => {
+    const [result, setResult] = useState<unknown | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<any>({});
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -14,11 +20,11 @@ const useFetchExpress = (url: string, params: any = null, options: any = { metho
                 const res = await fetch(urlParams, { ...options, signal });
                 const json = await res.json();
                 if (!signal.aborted) {
-                    setData(json);
+                    setResult(json);
                 }
             } catch (e) {
                 if (!signal.aborted) {
-                    setError(e);
+                    setError(e as Error);
                 }
             } finally {
                 if (!signal.aborted) {
@@ -32,7 +38,7 @@ const useFetchExpress = (url: string, params: any = null, options: any = { metho
         };
     }, [url]);
 
-    return { data, loading, error };
+    return { result, loading, error };
 }
 
 export default useFetchExpress;

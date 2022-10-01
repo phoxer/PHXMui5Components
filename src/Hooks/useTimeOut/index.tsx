@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 
-const useTimeOut = (delay: number) => {
+type TUseTimeOut<T> = {
+    readonly timeIsOut: boolean;
+}
+
+const useTimeOut = (delay: number): TUseTimeOut<boolean> => {
     const [timeIsOut, setTimeIsOut] = useState<boolean>(false);
     
     useEffect(() => {
