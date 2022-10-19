@@ -1,12 +1,9 @@
 {
   "name": "@phoxer/react-components",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Phoxer React Components",
   "scripts": {
-    "rollup": "rollup -c",
-    "build": "rm -rf dist/ && prettier -- write src/ && npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module CommonJS --outDir dist/cjs"
+    "rollup": "rollup -c"
   },
   "keywords": [
     "Phoxer",
@@ -25,9 +22,9 @@
     "@types/date-fns": "^2.6.0",
     "@types/node": "^18.7.23",
     "@types/react": "^18.0.21",
-    "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "date-fns": "^2.29.3",
     "rollup": "^2.79.1",
     "rollup-plugin-dts": "^4.2.2",
     "tslib": "^2.4.0",
@@ -35,11 +32,11 @@
   },
   "peerDependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "resolutions": {
-    "**/react": "^18.2.0",
-    "**/react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.7",
+    "date-fns": "^2.29.3"
   },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",

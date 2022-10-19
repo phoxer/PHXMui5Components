@@ -4,7 +4,7 @@ type TUseTimeOut<T> = {
     readonly timeIsOut: boolean;
 }
 
-const useTimeOut = (delay: number): TUseTimeOut<boolean> => {
+const useTimeOut = (delay: number): TUseTimeOut<unknown> => {
     const [timeIsOut, setTimeIsOut] = useState<boolean>(false);
     
     useEffect(() => {
