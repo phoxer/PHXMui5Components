@@ -1,5 +1,4 @@
-import React from 'react';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import CircularProgress from '@mui/material/CircularProgress';
 import DialogContent from '@mui/material/DialogContent';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type TUseFetchData<T> = {
     readonly loading: boolean;
@@ -41,6 +41,52 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
             setLoading(true);
             try {
                 const postOptions = { ...options, method: 'POST', signal: abortController.signal, body: JSON.stringify(params) }
+                const res = await fetch(`${url}${endPoint}`, postOptions);
+                const jsonData = await res.json();
+                if (!abortController.signal.aborted) {
+                    if (callBack) {
+                        callBack(jsonData);
+                    } else { 
+                        setResult(jsonData);
+                    }
+                }
+            } catch (e) {
+                if (!abortController.signal.aborted) {
+                    setError(e as Error);
+                }
+            } finally {
+                if (!abortController.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        },
+        put: async (endPoint: string, params: any, callBack?: (data: any) => void) => {
+            setLoading(true);
+            try {
+                const postOptions = { ...options, method: 'PUT', signal: abortController.signal, body: JSON.stringify(params) }
+                const res = await fetch(`${url}${endPoint}`, postOptions);
+                const jsonData = await res.json();
+                if (!abortController.signal.aborted) {
+                    if (callBack) {
+                        callBack(jsonData);
+                    } else { 
+                        setResult(jsonData);
+                    }
+                }
+            } catch (e) {
+                if (!abortController.signal.aborted) {
+                    setError(e as Error);
+                }
+            } finally {
+                if (!abortController.signal.aborted) {
+                    setLoading(false);
+                }
+            }
+        },
+        delete: async (endPoint: string, params: any, callBack?: (data: any) => void) => {
+            setLoading(true);
+            try {
+                const postOptions = { ...options, method: 'DELETE', signal: abortController.signal, body: JSON.stringify(params) }
                 const res = await fetch(`${url}${endPoint}`, postOptions);
                 const jsonData = await res.json();
                 if (!abortController.signal.aborted) {

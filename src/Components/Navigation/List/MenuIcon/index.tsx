@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
 interface IMenuIcon {
