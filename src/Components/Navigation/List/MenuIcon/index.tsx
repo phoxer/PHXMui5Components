@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import ListItemIcon from '@mui/material/ListItemIcon';
 
-interface IMenuIcon {
+type IMenuIcon = {
     icon: JSX.Element;
 }
 

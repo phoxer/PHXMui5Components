@@ -1,11 +1,11 @@
 import Tab from '@mui/material/Tab';
 
-export interface IValue {
+export type IValue = {
     tabIndex: number;
     value: any;
 }
 
-interface ITabItem {
+type ITabItem = {
     tabIndex: number;
     selectedIndex: number;
     label: string;

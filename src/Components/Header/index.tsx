@@ -1,12 +1,14 @@
+/** 1.0.1 | www.phoxer.com */
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-interface IHeader {
+type THeader = {
     title: string;
     icon?: JSX.Element;
-    buttonGroup?: JSX.Element;
+    children?: React.ReactNode;
     barProps?: any;
     toolBarProps?: any;
     titleProps?: any;
@@ -29,16 +31,17 @@ const STypography = styled(Typography)`
     line-height: 0rem;
 `
 
-const Header: React.FC<IHeader> = ({ title, icon, buttonGroup, barProps, toolBarProps, titleProps }) => {
+const Header: React.FC<THeader> = ({ title, icon, children, barProps, toolBarProps, titleProps }) => {
     return (<SAppBar { ...{ position:"static", ...barProps } }>
         <SToolbar { ...{ variant:"dense", ...toolBarProps } }>
             {icon && icon}
             <STypography {...titleProps}>
                 {title}
             </STypography>
-            {buttonGroup && buttonGroup}
+            {children && <Stack spacing={1} direction="row">{children}</Stack>}
         </SToolbar>
     </SAppBar>)
 }
 
 export default Header;
+export type { THeader };

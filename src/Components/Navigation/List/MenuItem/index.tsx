@@ -4,12 +4,12 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import MenuIcon from '../MenuIcon';
 
-export interface IValue {
+export type IValue = {
   index: number;
   value: any;
 }
 
-interface IMenuItem {
+type IMenuItem = {
     label: string;
     value: any;
     onMenuItemClick: (value: IValue) => void;

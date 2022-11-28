@@ -1,3 +1,4 @@
+/** 1.0.1 | www.phoxer.com */
 import { useState } from 'react';
 import MenuList from '@mui/material/MenuList';
 import MenuItem, { IValue } from './MenuItem';
@@ -13,7 +14,7 @@ export interface IListData {
     expanded?: boolean;
 }
 
-interface IList {
+type IList = {
     id: string;
     listData: IListData[];
     onChange: (value: any) => void;

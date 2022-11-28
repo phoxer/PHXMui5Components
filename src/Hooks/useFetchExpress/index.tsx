@@ -1,44 +1,64 @@
+/** 1.0.2 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 
-type TUseFetchExpress<T> = {
+type TUseFetchExpress = {
     readonly loading: boolean;
-    readonly error: Error | null;
-    readonly result: T | null;
+    readonly error: any | null;
+    readonly result: any | null;
+    readonly retry: number;
+    readonly retryFetch: () => void;
 }
 
-const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }): TUseFetchExpress<unknown> => {
-    const [result, setResult] = useState<unknown | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+type TData = {
+    result: any | null;
+    error: any | null;
+    loading: boolean;
+}
+
+const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }): TUseFetchExpress => {
+    const [data, setData] = useState<TData>({ result: null, error: null, loading: true });
+    const [retry, setRetry] = useState<number>(0);
+
+    const retryFetch = () => {
+        setData({ result: null, error: null, loading: true });
+        setRetry((oldRetry) => {
+            return oldRetry + 1;
+        })
+    }
 
     useEffect(() => {
         const abortController = new AbortController();
         const signal = abortController.signal;
         const doFetch = async () => {
-            const urlParams = params ? `${url}?${new URLSearchParams(params).toString()}` : url;
-            try {
-                const res = await fetch(urlParams, { ...options, signal });
-                const json = await res.json();
-                if (!signal.aborted) {
-                    setResult(json);
+            const urlParams = (options.method === 'GET' && params) ? `${url}?${new URLSearchParams(params).toString()}` : url;
+            const opts = (options.method === 'GET') ? { ...options, signal } : { ...options, signal, body: JSON.stringify(params)};
+            await fetch(urlParams, opts).then((res) => {
+                if (res.ok && res.status === 200) {
+                    return res.json();
                 }
-            } catch (e) {
                 if (!signal.aborted) {
-                    setError(e as Error);
+                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
                 }
-            } finally {
+                return Promise.reject(res);
+            }).then((json) => {
+                if (!signal.aborted && json) {
+                    setData({ result: json, error: null, loading: false });
+                }
+            }).catch((e: Response) => {
+                console.error(e);
                 if (!signal.aborted) {
-                    setLoading(false);
+                    const error = e.status? { status: e.status, message: e.statusText } : { status: 500, message: `${e}` }
+                    setData({ result: null, error, loading: false });
                 }
-            }
+            });
         }
         doFetch();
         return () => {
             abortController.abort();
         };
-    }, [url]);
+    }, [url, retry]);
 
-    return { result, loading, error };
+    return { ...data, retryFetch, retry };
 }
 
 export default useFetchExpress;

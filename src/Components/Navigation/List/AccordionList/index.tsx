@@ -7,7 +7,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import MenuIcon from '../MenuIcon';
 
-export interface IAccordionList {
+export type IAccordionList = {
     id: string;
     title: string | undefined;
     children: React.ReactNode;

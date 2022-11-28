@@ -1,110 +1,125 @@
+/** 1.0.2 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 
-type TUseFetchData<T> = {
+type TUseFetchData = {
     readonly loading: boolean;
-    readonly error: Error | null;
-    readonly result: T | null;
+    readonly error: any | null;
+    readonly result: any | null;
     readonly fetchData: any;
 }
 
-const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'application/json'} }): TUseFetchData<unknown>  => {
-    const [result, setResult] = useState<unknown | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<Error | null>(null);
+type TData = {
+    result: any | null;
+    error: any | null;
+    loading: boolean;
+}
+
+const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'application/json'} }): TUseFetchData  => {
+    const [data, setData] = useState<TData>({ result: null, error: null, loading: false });
     const abortController = new AbortController();
 
+    const handleError = (e: Response) => {
+        const error = e.status? { status: e.status, message: e.statusText } : { status: 500, message: `${e}` }
+        setData({ result: null, error, loading: false });
+    }
+
+    const handleResult = (json: any, callBack?: (jsonData: any) => void, preserve: boolean = false) => {
+        if (callBack) {
+            callBack(json);
+            setData({ result: preserve? data.result : null, error: null, loading: false });
+        } else {
+            setData({ result: json, error: null, loading: false });
+        }
+    }
+
     const fetchData = {
-        get: async (endPoint: string, params: any = null, callBack?: (data: any) => void) => {
+        get: async (endPoint: string, params: any = null, callBack?: (data: any) => void, preserve: boolean = false) => {
             const urlParams = params ? `${url}${endPoint}?${new URLSearchParams(params).toString()}` : `${url}${endPoint}`;
-            setLoading(true);
-            try {
-                const res = await fetch(urlParams, { ...options, method: 'GET', signal: abortController.signal });
-                const jsonData = await res.json();
-                if (!abortController.signal.aborted) {
-                    if (callBack) {
-                        callBack(jsonData);
-                    } else { 
-                        setResult(jsonData);
-                    }
+            setData({ result: null, error: null, loading: true });
+            await fetch(urlParams, { ...options, method: 'GET', signal: abortController.signal }).then((res) => {
+                if (res.ok && res.status === 200) {
+                    return res.json();
                 }
-            } catch (e) {
                 if (!abortController.signal.aborted) {
-                    setError(e as Error);
+                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
                 }
-            } finally {
+                return Promise.reject(res);
+            }).then((json) => {
+                if (!abortController.signal.aborted && json) {
+                    handleResult(json, callBack, preserve);
+                }
+            }).catch((e: Response) => {
+                console.error(e);
                 if (!abortController.signal.aborted) {
-                    setLoading(false);
+                    handleError(e);
                 }
-            }
+            });
         },
-        post: async (endPoint: string, params: any, callBack?: (data: any) => void) => {
-            setLoading(true);
-            try {
-                const postOptions = { ...options, method: 'POST', signal: abortController.signal, body: JSON.stringify(params) }
-                const res = await fetch(`${url}${endPoint}`, postOptions);
-                const jsonData = await res.json();
-                if (!abortController.signal.aborted) {
-                    if (callBack) {
-                        callBack(jsonData);
-                    } else { 
-                        setResult(jsonData);
-                    }
+        post: async (endPoint: string, params: any, callBack?: (data: any) => void, preserve: boolean = false) => {
+            setData({ result: null, error: null, loading: true });
+            const postOptions = { ...options, method: 'POST', signal: abortController.signal, body: JSON.stringify(params) }
+            await fetch(`${url}${endPoint}`, postOptions).then((res) => {
+                if (res.ok && res.status === 200) {
+                    return res.json();
                 }
-            } catch (e) {
                 if (!abortController.signal.aborted) {
-                    setError(e as Error);
+                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
                 }
-            } finally {
+                return Promise.reject(res);
+            }).then((json) => {
+                if (!abortController.signal.aborted && json) {
+                    handleResult(json, callBack, preserve);
+                }
+            }).catch((e: Response) => {
+                console.error(e);
                 if (!abortController.signal.aborted) {
-                    setLoading(false);
+                    handleError(e);
                 }
-            }
+            });
         },
-        put: async (endPoint: string, params: any, callBack?: (data: any) => void) => {
-            setLoading(true);
-            try {
-                const postOptions = { ...options, method: 'PUT', signal: abortController.signal, body: JSON.stringify(params) }
-                const res = await fetch(`${url}${endPoint}`, postOptions);
-                const jsonData = await res.json();
-                if (!abortController.signal.aborted) {
-                    if (callBack) {
-                        callBack(jsonData);
-                    } else { 
-                        setResult(jsonData);
-                    }
+        put: async (endPoint: string, params: any, callBack?: (data: any) => void, preserve: boolean = false) => {
+            setData({ result: null, error: null, loading: true });
+            const postOptions = { ...options, method: 'PUT', signal: abortController.signal, body: JSON.stringify(params) }
+            await fetch(`${url}${endPoint}`, postOptions).then((res) => {
+                if (res.ok && res.status === 200) {
+                    return res.json();
                 }
-            } catch (e) {
                 if (!abortController.signal.aborted) {
-                    setError(e as Error);
+                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
                 }
-            } finally {
+                return Promise.reject(res);
+            }).then((json) => {
+                if (!abortController.signal.aborted && json) {
+                    handleResult(json, callBack, preserve);
+                }
+            }).catch((e: Response) => {
+                console.error(e);
                 if (!abortController.signal.aborted) {
-                    setLoading(false);
+                    handleError(e);
                 }
-            }
+            });
         },
-        delete: async (endPoint: string, params: any, callBack?: (data: any) => void) => {
-            setLoading(true);
-            try {
-                const postOptions = { ...options, method: 'DELETE', signal: abortController.signal, body: JSON.stringify(params) }
-                const res = await fetch(`${url}${endPoint}`, postOptions);
-                const jsonData = await res.json();
-                if (!abortController.signal.aborted) {
-                    if (callBack) {
-                        callBack(jsonData);
-                    } else { 
-                        setResult(jsonData);
-                    }
+        delete: async (endPoint: string, params: any, callBack?: (data: any) => void, preserve: boolean = false) => {
+            setData({ result: null, error: null, loading: true });
+            const postOptions = { ...options, method: 'DELETE', signal: abortController.signal, body: JSON.stringify(params) }
+            await fetch(`${url}${endPoint}`, postOptions).then((res) => {
+                if (res.ok && res.status === 200) {
+                    return res.json();
                 }
-            } catch (e) {
                 if (!abortController.signal.aborted) {
-                    setError(e as Error);
+                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
                 }
-            } finally {
+                return Promise.reject(res);
+            }).then((json) => {
+                if (!abortController.signal.aborted && json) {
+                    handleResult(json, callBack, preserve);
+                }
+            }).catch((e: Response) => {
+                console.error(e);
                 if (!abortController.signal.aborted) {
-                    setLoading(false);
+                    handleError(e);
                 }
-            }
+            });
         }
     }
 
@@ -114,7 +129,7 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
         };
     }, []);
 
-    return { result, loading, error, fetchData };
+    return { ...data, fetchData };
 }
 
 export default useFetchData;

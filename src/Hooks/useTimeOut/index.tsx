@@ -1,10 +1,11 @@
+/** 1.0.0 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 
-type TUseTimeOut<T> = {
+type TUseTimeOut = {
     readonly timeIsOut: boolean;
 }
 
-const useTimeOut = (delay: number): TUseTimeOut<unknown> => {
+const useTimeOut = (delay: number): TUseTimeOut => {
     const [timeIsOut, setTimeIsOut] = useState<boolean>(false);
     
     useEffect(() => {

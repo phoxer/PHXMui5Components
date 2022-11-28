@@ -1,15 +1,16 @@
+/** 1.0.1 | www.phoxer.com */
 import { useState } from 'react';
 import { Tabs as TabsBar } from '@mui/material';
 import TabItem, { IValue } from './TabItem';
 
-export interface ITabsData {
+export type ITabsData = {
     label: string;
     value: any;
     icon?: JSX.Element;
     tabProps?: any;
 }
 
-interface ITabs {
+type ITabs = {
     id: string;
     tabsData: ITabsData[];
     onChange: (value: any) => void;
