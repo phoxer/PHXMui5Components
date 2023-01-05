@@ -1,4 +1,4 @@
-/** 1.0.2 | www.phoxer.com */
+/** 1.0.3 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 
 type TUseFetchData = {
@@ -14,12 +14,15 @@ type TData = {
     loading: boolean;
 }
 
+const okStatus = [200,201,202];
+
 const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'application/json'} }): TUseFetchData  => {
     const [data, setData] = useState<TData>({ result: null, error: null, loading: false });
     const abortController = new AbortController();
 
     const handleError = (e: Response) => {
-        const error = e.status? { status: e.status, message: e.statusText } : { status: 500, message: `${e}` }
+        const statusText = e.statusText? e.statusText : "Fetch Error";
+        const error = e.status? { status: e.status, message: statusText } : { status: 500, message: `${e}` }
         setData({ result: null, error, loading: false });
     }
 
@@ -37,11 +40,11 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
             const urlParams = params ? `${url}${endPoint}?${new URLSearchParams(params).toString()}` : `${url}${endPoint}`;
             setData({ result: null, error: null, loading: true });
             await fetch(urlParams, { ...options, method: 'GET', signal: abortController.signal }).then((res) => {
-                if (res.ok && res.status === 200) {
+                if (res.ok && okStatus.includes(res.status)) {
                     return res.json();
                 }
                 if (!abortController.signal.aborted) {
-                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
+                    handleError(res);
                 }
                 return Promise.reject(res);
             }).then((json) => {
@@ -59,11 +62,11 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
             setData({ result: null, error: null, loading: true });
             const postOptions = { ...options, method: 'POST', signal: abortController.signal, body: JSON.stringify(params) }
             await fetch(`${url}${endPoint}`, postOptions).then((res) => {
-                if (res.ok && res.status === 200) {
+                if (res.ok && okStatus.includes(res.status)) {
                     return res.json();
                 }
                 if (!abortController.signal.aborted) {
-                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
+                    handleError(res);
                 }
                 return Promise.reject(res);
             }).then((json) => {
@@ -81,11 +84,11 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
             setData({ result: null, error: null, loading: true });
             const postOptions = { ...options, method: 'PUT', signal: abortController.signal, body: JSON.stringify(params) }
             await fetch(`${url}${endPoint}`, postOptions).then((res) => {
-                if (res.ok && res.status === 200) {
+                if (res.ok && okStatus.includes(res.status)) {
                     return res.json();
                 }
                 if (!abortController.signal.aborted) {
-                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
+                    handleError(res);
                 }
                 return Promise.reject(res);
             }).then((json) => {
@@ -103,11 +106,11 @@ const useFetchData = (url: string, options: any = { headers: {'Content-Type': 'a
             setData({ result: null, error: null, loading: true });
             const postOptions = { ...options, method: 'DELETE', signal: abortController.signal, body: JSON.stringify(params) }
             await fetch(`${url}${endPoint}`, postOptions).then((res) => {
-                if (res.ok && res.status === 200) {
+                if (res.ok && okStatus.includes(res.status)) {
                     return res.json();
                 }
                 if (!abortController.signal.aborted) {
-                    setData({ result: null, error: { status: res.status, message: res.statusText }, loading: false });
+                    handleError(res);
                 }
                 return Promise.reject(res);
             }).then((json) => {

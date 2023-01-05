@@ -1,5 +1,5 @@
-//** 1.0.2 | www.phoxer.com */
-import { createContext, useState, useContext } from 'react';
+//** 1.0.3 | www.phoxer.com */
+import { createContext, useState, useContext, useRef } from 'react';
 import SnackMessage, { ISnackMessage, ISnackMessageExtend, TAutoHideDuration } from './SnackMessage';
 import { SnackbarOrigin } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -39,31 +39,26 @@ const SSnacksMessageContainer = styled('div')((props: SnackbarOrigin) => `
 
 const SnackMessages: React.FC<TSnackMessages> = ({ children, maxSnacks = 5, autoHideDuration = 5000, position = { vertical: 'bottom', horizontal: 'right' } }) => {
     const [snackMessages, setSnackMessage] = useState<ISnackMessageExtend[]>([]);
-    const [snackCount, setSnackCount] = useState<number>(0);
+    const snackCount = useRef<number>(0);
 
     const showSnackMessage = (snackData: ISnackMessage) => {
         setSnackMessage((prevSnackMessages: ISnackMessageExtend[]) => {
-            return [...prevSnackMessages, {...snackData, id: snackCount, show: true, autoHideDuration }];
+            return [...prevSnackMessages, {...snackData, id: snackCount.current, autoHideDuration }];
         });
-        setSnackCount((prevCount: number) => {
-            return prevCount + 1;
-        });
+        snackCount.current = snackCount.current + 1;
     }
 
     const onSnackMessageClose = (closedSnack: ISnackMessageExtend) => {
         setSnackMessage((prevSnackMessages: ISnackMessageExtend[]) => {
-            const activeSnacks = prevSnackMessages.filter((snack: ISnackMessageExtend) => {
-                return snack.show === true;
-            });
-            const newSnackMessages = activeSnacks.map((snack: ISnackMessageExtend) => {
-                return snack.id === closedSnack.id ? {...snack, show: false} : snack;
+            const newSnackMessages = prevSnackMessages.filter((snack: ISnackMessageExtend) => {
+                return snack.id !== closedSnack.id;
             });
             return [...newSnackMessages];
         });
     }
 
     const totalSnacks: number = snackMessages.length;
-    const queuedSnacks: number = (snackMessages.length > maxSnacks) ? snackMessages.length - maxSnacks : 0;
+    const queuedSnacks: number = (totalSnacks > maxSnacks) ? totalSnacks - maxSnacks : 0;
 
     return (<SnackMessagesContext.Provider value={{ showSnackMessage, totalSnacks, queuedSnacks }}>
         {children}

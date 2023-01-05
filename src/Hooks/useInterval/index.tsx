@@ -7,13 +7,17 @@ type TUseInterval = {
     readonly stopInterval: (reset?: boolean) => void;
 }
 
-const useInterval = (delay: number, step: number = 1, startAutomatically: boolean = true): TUseInterval => {
+const useInterval = (delay: number, step: number = 1, startOnMount: boolean = true): TUseInterval => {
     const [interval, setTimer] = useState<number>(0);
     const id = useRef<NodeJS.Timer | null>(null);
 
     const startInterval = () => {
         if (delay < 10) {
-            console.error("delay value should be higher than 10");
+            console.error("delay value should be higher than 10 milliseconds");
+            return;
+        }
+        if (step < 1) {
+            console.error("step value should be higher than 1");
             return;
         }
         id.current = setInterval(() => {
@@ -24,7 +28,7 @@ const useInterval = (delay: number, step: number = 1, startAutomatically: boolea
     }
     
     useEffect(() => {
-        if (startAutomatically) {
+        if (startOnMount) {
             startInterval();
         }
         return () => clearInterval(id.current || 0);

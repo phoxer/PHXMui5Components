@@ -1,5 +1,4 @@
-/** 1.0.2 | www.phoxer.com */
-import { useState } from 'react';
+/** 1.0.3 | www.phoxer.com */
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -47,7 +46,6 @@ export interface IMessageDialog {
   onTryAgain?: () => void;
   children?: React.ReactNode;
   supportHTML?: boolean;
-  maxOnTryAgain?: number;
 }
 
 type TAgreeDisgreeActions = {
@@ -56,7 +54,6 @@ type TAgreeDisgreeActions = {
 
 type TTryAgainActions = {
     onTryAgain: () => void;
-    maxOnTryAgain: number;
 }
 
 type IMessageTitle = {
@@ -71,22 +68,9 @@ const AgreeDisgreeActions: React.FC<TAgreeDisgreeActions> = ({ onAgreeOrDisagree
     </DialogActions>);
 }
 
-const TryAgainActions: React.FC<TTryAgainActions> = ({ onTryAgain, maxOnTryAgain = 3 }) => {
-    const [count, setCount] = useState<number>(0);
-
-    const showAction = count < maxOnTryAgain;
-    const handleTryAction = () => {
-        if (showAction) {
-            setCount((oldCount: number) => {
-                return oldCount + 1;
-            });
-            onTryAgain();
-        }
-    }
-
+const TryAgainActions: React.FC<TTryAgainActions> = ({ onTryAgain }) => {
     return (<DialogActions sx={{ justifyContent: 'center' }}>
-        {showAction && <Button onClick={handleTryAction} autoFocus>{`Try Again (${maxOnTryAgain - count})`}</Button>}
-        {!showAction && <SDialogText>Maximum limit exceeded.</SDialogText>}
+        <Button variant='contained' onClick={onTryAgain} autoFocus>TRY AGAIN</Button>
     </DialogActions>);
 }
 
@@ -99,14 +83,14 @@ const MessageTitle: React.FC<IMessageTitle> = ({ title, onClose }) => {
     </SDialogTop>);
 }
 
-const MessageDialog: React.FC<IMessageDialog> = ({ show, title = "", message, severity = "info", onClose, onAgreeOrDisagree, onTryAgain, children = null, supportHTML = false, maxOnTryAgain = 3 }) => {
+const MessageDialog: React.FC<IMessageDialog> = ({ show, title = "", message, severity = "info", onClose, onAgreeOrDisagree, onTryAgain, children = null, supportHTML = false }) => {
     return (<SDialog open={show}>
       <SDialogContent>
         {onClose && <MessageTitle title={title} onClose={onClose} />}
         <Alert severity={severity}>{ supportHTML ? <div dangerouslySetInnerHTML={{ __html: message }} /> : message }</Alert>
       </SDialogContent>
       {onAgreeOrDisagree && <AgreeDisgreeActions onAgreeOrDisagree={onAgreeOrDisagree} />}
-      {onTryAgain && <TryAgainActions onTryAgain={onTryAgain} maxOnTryAgain={maxOnTryAgain} />}
+      {onTryAgain && <TryAgainActions onTryAgain={onTryAgain} />}
       {children && <DialogActions>{children}</DialogActions>}
     </SDialog>);
 }

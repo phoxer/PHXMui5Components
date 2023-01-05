@@ -1,25 +1,21 @@
-/** 1.0.2 | www.phoxer.com */
+/** 1.0.3 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import { AlertColor, SnackbarOrigin } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 export interface ISnackMessage {
     message: string;
     severity?: AlertColor | undefined;
-}
-
-interface SnackbarPosition extends SnackbarOrigin {
-    px?: number
+    onUndoAction?: () => void;
 }
 
 export type TAutoHideDuration = 3000|4000|5000|6000|7000|8000|9000|10000;
 
 export interface ISnackMessageExtend extends ISnackMessage {
-    show: boolean;
     id?: number;
-    position?: SnackbarPosition | undefined;
     autoHideDuration?: TAutoHideDuration;
     onClose?: (snackMessage: ISnackMessageExtend) => void;
 }
@@ -35,27 +31,33 @@ const SSnacksBar = styled(Snackbar)`
 `
 
 const SnackMessage: React.FC<ISnackMessageExtend> = (props: ISnackMessageExtend) => {
-    const { show, message, severity = 'success', position, autoHideDuration, onClose } = props;
-    const [showSnack, setShowSnack] = useState<boolean>(show);
+    const { message, severity = 'error', autoHideDuration, onClose, onUndoAction } = props;
 
     useEffect(() => {
-        if (show) {
-            const id = setInterval(() => {
-                closeSnack();
-            }, autoHideDuration);
-            return () => clearInterval(id);
-        }
-    }, [show]);
+        const id = setInterval(() => {
+            closeSnack();
+        }, autoHideDuration);
+        return () => clearInterval(id);
+    }, []);
 
     const closeSnack = () => {
-        setShowSnack(false);
         if (onClose) {
             onClose(props);
         }
     }
 
-    return (<SSnacksBar open={showSnack} anchorOrigin={position}>
-        <Alert severity={severity} sx={{ width: '100%' }} onClose={closeSnack}>
+    let actions;
+    if (onUndoAction) {
+        actions = { action: <Button color="error" size="small" onClick={() => {
+            onUndoAction();
+            closeSnack();
+        }}>UNDO</Button>}
+    } else {
+        actions = { onClose: closeSnack }
+    }
+
+    return (<SSnacksBar open={true}>
+        <Alert severity={severity} sx={{ width: '100%' }} {...actions}>
           {message}
         </Alert>
     </SSnacksBar>)

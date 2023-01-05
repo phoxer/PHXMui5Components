@@ -8,13 +8,7 @@ const packageJson = require("./package.json");
 
 export default [
   {
-    input: {
-      components: 'src/Components/index.ts',
-      hooks: 'src/Hooks/index.ts',
-      utils: 'src/Utils/index.ts',
-      constants: 'src/Constants/index.ts',
-      providers: 'src/Providers/index.ts'
-    },
+    input: "src/index.ts",
     output: [
       {
         file: packageJson.main,
@@ -28,9 +22,9 @@ export default [
       },
     ],
     plugins: [
-      peerDepsExternal(),
       resolve(),
       commonjs(),
+      peerDepsExternal(),
       typescript({ tsconfig: "./tsconfig.json" }),
     ],
   },

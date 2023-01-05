@@ -1,19 +1,29 @@
-/** 1.0.0 | www.phoxer.com */
-import { useEffect, useState } from 'react';
+/** 1.0.2 | www.phoxer.com */
+import { useEffect, useRef, useState } from 'react';
 
 type TUseTimeOut = {
     readonly timeIsOut: boolean;
+    readonly startTimeOut: () => void;
 }
 
-const useTimeOut = (delay: number): TUseTimeOut => {
+const useTimeOut = (delay: number, startOnMount: boolean = true): TUseTimeOut => {
     const [timeIsOut, setTimeIsOut] = useState<boolean>(false);
+    const id = useRef<NodeJS.Timeout>();
+
+    const startTimeOut = () => {
+        setTimeIsOut(false);
+        clearTimeout(id.current);
+        id.current = setTimeout(() => setTimeIsOut(true), delay);
+    }
     
     useEffect(() => {
-        const id = setTimeout(() => setTimeIsOut(true), delay);
-        return () => clearTimeout(id);
+        if (startOnMount) {
+            startTimeOut();
+        }
+        return () => clearTimeout(id.current);
     }, [delay]);
 
-    return { timeIsOut };
+    return { timeIsOut, startTimeOut };
 }
 
 export default useTimeOut;

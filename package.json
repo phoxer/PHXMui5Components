@@ -1,9 +1,9 @@
 {
   "name": "@phoxer/react-components",
-  "version": "1.1.0",
+  "version": "1.1.4",
   "description": "Phoxer React Components",
   "scripts": {
-    "rollup": "rollup -c"
+    "rollup": "rm -rf dist && rollup -c"
   },
   "keywords": [
     "Phoxer",
