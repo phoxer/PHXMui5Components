@@ -1,7 +1,7 @@
 {
   "name": "@phoxer/react-components",
-  "version": "1.1.4",
-  "description": "Phoxer React Components",
+  "version": "1.1.8",
+  "description": "Phoxer - React Components",
   "scripts": {
     "rollup": "rm -rf dist && rollup -c"
   },
@@ -10,7 +10,7 @@
     "React",
     "Components"
   ],
-  "author": "Phoxer",
+  "author": "Phoxer <phoxer.roberto@gmail.com> (http://phoxer.com/)",
   "license": "MIT",
   "devDependencies": {
     "@emotion/react": "^11.10.4",
@@ -22,7 +22,6 @@
     "@rollup/plugin-typescript": "^8.5.0",
     "@types/node": "^18.7.23",
     "@types/react": "^18.0.21",
-    "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup": "^2.79.1",
@@ -36,7 +35,6 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.10",
-    "date-fns": "^2.29.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -45,8 +43,5 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/phoxer"
-  },
   "types": "dist/index.d.ts"
 }

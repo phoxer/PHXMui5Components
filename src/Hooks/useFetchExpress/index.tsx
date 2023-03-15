@@ -1,4 +1,4 @@
-/** 1.0.3 | www.phoxer.com */
+/** 1.0.4 | www.phoxer.com */
 import { useEffect, useState } from 'react';
 
 type TUseFetchExpress = {
@@ -16,8 +16,9 @@ type TData = {
 }
 
 const okStatus = [200,201,202];
+const headers = {'Content-Type': 'application/json; charset=UTF-8'};
 
-const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET', headers: {'Content-Type': 'application/json'} }): TUseFetchExpress => {
+const useFetchExpress = (url: string, params: any = null, options: any = { method: 'GET' }): TUseFetchExpress => {
     const [data, setData] = useState<TData>({ result: null, error: null, loading: true });
     const [retry, setRetry] = useState<number>(0);
 
@@ -35,34 +36,23 @@ const useFetchExpress = (url: string, params: any = null, options: any = { metho
     }
 
     useEffect(() => {
-        const abortController = new AbortController();
-        const signal = abortController.signal;
         const doFetch = async () => {
             const urlParams = (options.method === 'GET' && params) ? `${url}?${new URLSearchParams(params).toString()}` : url;
-            const opts = (options.method === 'GET') ? { ...options, signal } : { ...options, signal, body: JSON.stringify(params)};
+            const opts = (options.method === 'GET') ? { headers, ...options } : { headers, ...options, body: JSON.stringify(params)};
             await fetch(urlParams, opts).then((res) => {
                 if (res.ok && okStatus.includes(res.status)) {
                     return res.json();
                 }
-                if (!signal.aborted) {
-                    handleError(res);
-                }
+                handleError(res);
                 return Promise.reject(res);
             }).then((json) => {
-                if (!signal.aborted && json) {
-                    setData({ result: json, error: null, loading: false });
-                }
+                setData({ result: json, error: null, loading: false });
             }).catch((e: Response) => {
                 console.error(e);
-                if (!signal.aborted) {
-                    handleError(e);
-                }
+                handleError(e);
             });
         }
         doFetch();
-        return () => {
-            abortController.abort();
-        };
     }, [url, retry]);
 
     return { ...data, retryFetch, retry };
