@@ -12,6 +12,7 @@ import DataSort, { IDataSort, IDataSortValues } from "./DataSort";
 import SearchInput from './SearchInput';
 import DropDown from "./DropDown";
 import CheckBoxList from './CheckBoxList';
+import DateInput from './DateInput';
 
 type Breakpoints = {
     [key: string]: string | number;
@@ -20,7 +21,7 @@ type Breakpoints = {
 export interface IFilter {
     id: string;
     label: string;
-    type: "Search" | "DropDown" | "CheckBoxList" | "Autocomplete" ;
+    type: "Search" | "DropDown" | "CheckBoxList" | "Autocomplete" | "Date";
     defaultValue: any;
     options?: any[];
     breakpoints: Breakpoints;
@@ -49,6 +50,7 @@ const FilterWrapper: React.FC<IFilterState> = ({ id, label, type, options, value
     return (<Grid item {...breakpoints}>
         {type === "Search" && <SearchInput id={id} label={label} value={value} onChange={onDataChange} componentProps={componentProps} />}
         {type === "DropDown" && <DropDown id={id} label={label} value={value} options={options || []} onChange={onDataChange} componentProps={componentProps} />}
+        {type === "Date" && <DateInput id={id} label={label} value={value} onChange={onDataChange} componentProps={componentProps} />}
         {(type === "CheckBoxList" && options) && <CheckBoxList id={id} label={label} options={options || []} value={value} onChange={onDataChange} componentProps={componentProps} />}
     </Grid>);
 };

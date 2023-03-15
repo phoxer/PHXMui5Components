@@ -3,4 +3,4 @@ export { LoadingDialog, type ILoadingDialog, MessageDialog, type IMessageDialog 
 export { default as Header, type THeader } from './Header';
 export * from './Navigation';
 export { default as SnackMessages, useSnackMessages  } from './SnackMessages';
-export { default as DataFilters, IFilter, type TFilters } from './DataFilters';
+export { default as DataFilters } from './DataFilters';
