@@ -1,4 +1,4 @@
-/** 1.0.1 | www.phoxer.com */
+/** 1.0.2 | www.phoxer.com */
 import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -9,9 +9,9 @@ type THeader = {
     title: string;
     icon?: JSX.Element;
     children?: React.ReactNode;
-    barProps?: any;
+    appBarProps?: any;
     toolBarProps?: any;
-    titleProps?: any;
+    typographyProps?: any;
 }
 
 const SAppBar = styled(AppBar)`
@@ -19,9 +19,12 @@ const SAppBar = styled(AppBar)`
     background-color: unset;
     color: #000;
     border-bottom: .1rem rgba(0, 0, 0, 0.12) solid;
+    padding-bottom: 1rem;
+    width: 100%
 `
 const SToolbar = styled(Toolbar)`
     padding: 0px 8px !important;
+    width: 100%
 `
 const STypography = styled(Typography)`
     font-size: 1.2rem;
@@ -31,11 +34,11 @@ const STypography = styled(Typography)`
     line-height: 0rem;
 `
 
-const Header: React.FC<THeader> = ({ title, icon, children, barProps, toolBarProps, titleProps }) => {
-    return (<SAppBar { ...{ position:"static", ...barProps } }>
+const Header: React.FC<THeader> = ({ title, icon, children, appBarProps, toolBarProps, typographyProps }) => {
+    return (<SAppBar { ...{ position:"static", ...appBarProps } }>
         <SToolbar { ...{ variant:"dense", ...toolBarProps } }>
             {icon && icon}
-            <STypography {...titleProps}>
+            <STypography {...typographyProps}>
                 {title}
             </STypography>
             {children && <Stack spacing={1} direction="row">{children}</Stack>}

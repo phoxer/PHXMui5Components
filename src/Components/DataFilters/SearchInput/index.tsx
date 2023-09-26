@@ -1,23 +1,21 @@
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import { Search } from '@mui/icons-material';
-import isEmpty from "lodash/isEmpty";
+import { isEmpty } from 'ramda';
 
 type TSearchInput = {
-    id: string;
     label: string;
+    key: string;
     value: string | null;
     onChange: React.Dispatch<any>;
     componentProps?: any;
 }
 
-const SearchInput: React.FC<TSearchInput> = ({ id, label, value, onChange, componentProps }): JSX.Element => {
+const SearchInput: React.FC<TSearchInput> = ({ label, key, value, onChange, componentProps }): JSX.Element => {
     return <TextField
-        id={id}
+        id={key}
         value={value || ""}
         label={label}
-        variant="outlined"
-        size="small"
         {...componentProps}
         InputProps={{
             startAdornment: (
@@ -29,7 +27,7 @@ const SearchInput: React.FC<TSearchInput> = ({ id, label, value, onChange, compo
         fullWidth
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             onChange((oldData: any) => {
-                return {...oldData, [id]: isEmpty(event.target.value)? null : event.target.value };
+                return {...oldData, [key]: isEmpty(event.target.value)? null : event.target.value };
             });
         }}
     />

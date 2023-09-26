@@ -1,58 +1,65 @@
-/** 1.0.1 | www.phoxer.com */
-import { useState } from 'react';
-import MenuList from '@mui/material/MenuList';
-import MenuItem, { IValue } from './MenuItem';
-import AccordionList from './AccordionList';
+/** 2.0.2 | www.phoxer.com */
+import { useState, useMemo } from 'react';
+import MenuList from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Collapse from '@mui/material/Collapse';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import Divider from '@mui/material/Divider';
+import { isNil, isEmpty } from 'ramda';
 
-export interface IListData {
+export interface IListItem {
     label?: string;
-    title?: string;
     value?: any;
     icon?: JSX.Element;
-    listData?: IListData[];
-    expandable?: boolean;
+    listItems?: IListItem[];
     expanded?: boolean;
+    active?: boolean;
 }
 
-type IList = {
-    id: string;
-    listData: IListData[];
-    onChange: (value: any) => void;
-    defaultSelected?: number;
-    menuProps?: any;
+interface IList extends IListItem {
+    onItemSelected: (value: any) => void;
 }
 
-const List: React.FC<IList> = ({ id, listData, onChange, defaultSelected = -1, menuProps }) => {
-    const [selectedIndex, setSelectedIndex] = useState<number>(defaultSelected);
-    let index = 0;
+type TExpandList = {
+    open: boolean;
+}
 
-    const setNewIndex = () => {
-        index ++;
-        return index-1;
+const ExpandList: React.FC<TExpandList> = ({ open }) => {
+    return open ? <ExpandMore /> : <ChevronRight />
+}
+
+const List: React.FC<IList> = ({ label, value = null, icon, listItems, onItemSelected, expanded = true }) => {
+    const [open, setOpen] = useState<boolean>(expanded);
+    const isHeader = isNil(value) && !isEmpty(listItems);
+    const showLabel = !isNil(label) || !isNil(icon);
+
+    const menuItemAction = (): Object => {
+        if (!isNil(value)) {
+            return { onClick: () => onItemSelected(value) };
+        } else if (isHeader) {
+            return showLabel? { onClick: () => setOpen((op: boolean) => !op) } : {};
+        }
+        return {};
     }
 
-    const onMenuItemClick = ({ index, value}: IValue) => {
-        onChange(value);
-        setSelectedIndex(index);
-    }
-
-    return (<MenuList {...menuProps}>
-        {listData.map((data: IListData) => {
-            const { label = "", title= "", value, icon, listData: accordeonData, expandable = false, expanded = false } = data;
-            
-            if (expandable && accordeonData) {
-                return (<AccordionList key={`${id}-Acc${index}`} id={id} title={title} icon={icon} expanded={expanded} >
-                    {accordeonData.map((acData: IListData) => {
-                        const mnInx = setNewIndex();
-                        const mnID = `${id}-Itm${mnInx}`;
-                        return <MenuItem key={mnID} index={mnInx} label={acData.label ?? ""} value={acData.value} onMenuItemClick={onMenuItemClick} icon={acData.icon} selected={mnInx === selectedIndex} />
-                    })}
-                </AccordionList>)
-            }
-            const mnInx = setNewIndex();
-            const mnID = `${id}-Itm${mnInx}`;
-            return <MenuItem key={mnID} index={mnInx} label={label} value={value} onMenuItemClick={onMenuItemClick} icon={icon} selected={mnInx === selectedIndex} />
-        })}
+    return (<MenuList component="nav" dense disablePadding>
+        {showLabel && (<ListItemButton {...menuItemAction()}>
+            {icon && <ListItemIcon sx={{ minWidth: 30 }}>{icon}</ListItemIcon>}
+            {label && <ListItemText primary={label} primaryTypographyProps={{ variant: isHeader ? 'h6' : 'subtitle1' }} />}
+            {isHeader && <ExpandList open={open} />}
+        </ListItemButton>)}
+        {isHeader && <Divider />}
+        {isHeader && (<Collapse in={open} timeout="auto">
+            <MenuList component="div" disablePadding sx={{ paddingLeft: showLabel ? 2 : 0 }}>
+                {listItems && listItems.map((item: IListItem, index: number) => {
+                    return <List key={`itm${index}`} {...item} onItemSelected={onItemSelected} />
+                })}
+            </MenuList>
+            <Divider />
+        </Collapse>)}
     </MenuList>);
 }
 

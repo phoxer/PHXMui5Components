@@ -1,6 +1,6 @@
 {
   "name": "@phoxer/react-components",
-  "version": "1.1.8",
+  "version": "1.2.1",
   "description": "Phoxer - React Components",
   "scripts": {
     "rollup": "rm -rf dist && rollup -c"
@@ -18,13 +18,14 @@
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.10",
     "@mui/x-date-pickers": "^6.0.1",
-    "dayjs": "^1.11.7",
-    "lodash": "^4.17.21",
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^14.1.0",
     "@rollup/plugin-typescript": "^8.5.0",
+    "@types/ramda": "^0.29.4",
     "@types/node": "^18.7.23",
     "@types/react": "^18.0.21",
+    "dayjs": "^1.11.7",
+    "ramda": "^0.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rollup": "^2.79.1",
@@ -40,7 +41,7 @@
     "@mui/material": "^5.10.10",
     "@mui/x-date-pickers": "^6.0.1",
     "dayjs": "^1.11.7",
-    "lodash": "^4.17.21",
+    "ramda": "^0.29.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

@@ -1,4 +1,4 @@
-export { default as useFetchData } from './useFetchData';
+export { default as useFetchData, type TCallBack } from './useFetchData';
 export { default as useFetchExpress } from './useFetchExpress';
 export { default as useTimeOut } from './useTimeOut';
 export { default as useInterval } from './useInterval';
@@ -6,6 +6,9 @@ export { default as useAddScript } from './useAddScript';
 export { default as useAddStyle } from './useAddStyle';
 export { default as useWindowSize } from './useWindowSize';
 export { default as useStorage } from './useStorage';
+export { default as useLocalStorage } from './UseLocalStorage';
+export { default as useSessionStorage } from './UseSessionStorage';
 export { default as useCounter } from './useCounter';
+export { default as useQueryParams, type TQueryParams } from './useQueryParams';
 export { useDialogs } from '../Components/Dialogs';
 export { useSnackMessages } from '../Components/SnackMessages';
